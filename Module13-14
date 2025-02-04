@@ -1,0 +1,60 @@
+import java.util.*;
+
+public class TaskScheduler {
+    private static List<Map<String, Object>> tasks = new ArrayList<>();
+
+    private static void addTask(String name, int prio) {
+        Map<String, Object> task = new HashMap<>();
+        task.put("name", name);
+        task.put("priority", prio);
+        tasks.add(task);
+        Collections.sort(tasks, (a, b) -> Integer.compare((int) a.get("priority"), (int) b.get("priority")));
+    }
+
+    private static void runScheduler() {
+        if (tasks.isEmpty()) {
+            System.out.println("No tasks.");
+            return;
+        }
+        System.out.println("Tasks:");
+        tasks.forEach(t -> System.out.println("- " + t.get("name") + " (Prio: " + t.get("priority") + ")"));
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        while (true) {
+            System.out.println("\nMenu:\n1. Add\n2. Run\n3. Exit");
+            System.out.print("Choice: ");
+            String ch = sc.nextLine();
+
+            switch (ch) {
+                case "1":
+                    System.out.print("Task name: ");
+                    String name = sc.nextLine();
+                    int prio = 0;
+                    while (true) {
+                        try {
+                            System.out.print("Priority (lower=higher): ");
+                            prio = Integer.parseInt(sc.nextLine());
+                            if (prio > 0) break;
+                            else System.out.println("Positive integer priority.");
+                        } catch (NumberFormatException e) {
+                            System.out.println("Invalid priority.");
+                        }
+                    }
+                    addTask(name, prio);
+                    System.out.println("Task added.");
+                    break;
+                case "2":
+                    runScheduler();
+                    break;
+                case "3":
+                    System.out.println("Exiting.");
+                    sc.close();
+                    return;
+                default:
+                    System.out.println("Invalid choice.");
+            }
+        }
+    }
+}
